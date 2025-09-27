@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scent. Luxury Perfumes</title>
+    <!-- Tailwind CSS CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f3f0;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Custom scrollbar for horizontal product list on mobile */
+        .product-list-mobile::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .product-list-mobile::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        
+        .product-list-mobile::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        .animate-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .animate-fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Parallax effect for the hero section */
+        .hero-section {
+            background-image: url('https://images.unsplash.com/photo-1627471927702-861c8c125692?q=80&w=2940&auto=format&fit=crop');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-white bg-opacity-80 backdrop-blur-sm shadow-md py-4 px-6 flex justify-between items-center transition-all duration-300">
+        <a href="#" id="scent-logo-btn" class="text-2xl font-bold serif-font text-gray-800 hover:text-gray-600 transition-colors duration-200">Scent.</a>
+        <div class="flex items-center space-x-6">
+            <i id="search-icon" class="fas fa-search text-gray-600 hover:text-gray-900 cursor-pointer transition-colors duration-200"></i>
+            <i id="cart-icon" class="fas fa-shopping-bag text-gray-600 hover:text-gray-900 cursor-pointer transition-colors duration-200"></i>
+            <i id="user-icon" class="fas fa-user-circle text-gray-600 hover:text-gray-900 cursor-pointer transition-colors duration-200"></i>
+        </div>
+    </nav>
+
+    <!-- Search Pop-out -->
+    <div id="search-popup" class="fixed inset-0 z-40 hidden flex items-start justify-center pt-24 bg-black bg-opacity-50 transition-all duration-300">
+        <div class="w-full max-w-2xl bg-white p-6 rounded-lg shadow-xl relative animate-fade-in is-visible">
+            <button id="close-search-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <input id="search-input" type="text" placeholder="Find your perfect scent..." class="w-full p-4 text-lg rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all duration-200">
+            <div id="search-results" class="mt-4 max-h-64 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <!-- Main Page Content Container -->
+    <div id="main-content" class="transition-transform duration-500">
+        <!-- Hero Section -->
+        <header class="hero-section h-screen flex flex-col items-center justify-center text-center text-white relative">
+            <div class="absolute inset-0 bg-black opacity-30"></div>
+            <div class="relative z-10 p-4">
+                <h1 class="text-5xl md:text-7xl font-bold serif-font drop-shadow-lg">Discover Your Signature Scent</h1>
+                <p class="mt-4 text-lg md:text-xl font-light max-w-xl mx-auto">Luxury fragrances crafted for unforgettable moments. Find your perfect match and leave a lasting impression.</p>
+                <a href="#featured-collection" class="mt-8 px-8 py-3 bg-white text-gray-800 rounded-full shadow-lg hover:bg-gray-200 transition-colors duration-300 font-semibold">Shop the Collection</a>
+            </div>
+        </header>
+
+        <!-- Our Story Section -->
+        <section class="py-24 px-6 md:px-12 bg-white">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl serif-font font-bold mb-4 animate-fade-in">A Philosophy of Elegance</h2>
+                <p class="text-lg text-gray-600 leading-relaxed mb-8 animate-fade-in">At Scent., we believe a fragrance is more than a product—it's an identity. We blend passion with purity, crafting scents that tell a story and become part of your essence.</p>
+                <div class="grid md:grid-cols-3 gap-8 mt-12">
+                    <div class="flex flex-col items-center animate-fade-in">
+                        <i class="fas fa-seedling text-4xl text-gray-800 mb-4"></i>
+                        <h3 class="font-semibold text-xl">Natural Ingredients</h3>
+                        <p class="text-gray-500 text-sm mt-2">Sourced from the finest botanicals around the world.</p>
+                    </div>
+                    <div class="flex flex-col items-center animate-fade-in">
+                        <i class="fas fa-flask text-4xl text-gray-800 mb-4"></i>
+                        <h3 class="font-semibold text-xl">Artisanal Blending</h3>
+                        <p class="text-gray-500 text-sm mt-2">Each scent is meticulously crafted by master perfumers.</p>
+                    </div>
+                    <div class="flex flex-col items-center animate-fade-in">
+                        <i class="fas fa-award text-4xl text-gray-800 mb-4"></i>
+                        <h3 class="font-semibold text-xl">Timeless Quality</h3>
+                        <p class="text-gray-500 text-sm mt-2">Designed to be a classic for generations to come.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section id="featured-collection" class="py-24 px-6 md:px-12">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-4xl serif-font font-bold mb-8 text-center animate-fade-in">Our Featured Collection</h2>
+                <!-- Product list container with responsive layout -->
+                <div id="product-list" class="flex overflow-x-scroll snap-x snap-mandatory space-x-8 pb-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-8 md:space-x-0">
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white py-16 px-6">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
+                <!-- Brand Info -->
+                <div class="col-span-1">
+                    <h3 class="text-3xl font-bold serif-font mb-4">Scent.</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Luxury fragrances crafted with passion and purity, designed to leave a lasting impression.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-span-1">
+                    <h4 class="font-semibold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" data-target="about-us" class="footer-link hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#featured-collection" class="hover:text-white transition-colors">Shop All</a></li>
+                        <li><a href="#" data-target="contact" class="footer-link hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" data-target="faq" class="footer-link hover:text-white transition-colors">FAQ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Media -->
+                <div class="col-span-1">
+                    <h4 class="font-semibold text-lg mb-4">Follow Us</h4>
+                    <div class="flex space-x-4 text-2xl">
+                        <a href="#" aria-label="Instagram" class="hover:text-gray-400 transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter" class="hover:text-gray-400 transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Facebook" class="hover:text-gray-400 transition-colors"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="col-span-1">
+                    <h4 class="font-semibold text-lg mb-4">Stay in the Loop</h4>
+                    <p class="text-sm text-gray-400 mb-4">Get exclusive offers and fragrance updates.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your email address" class="w-full p-3 rounded-l-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-600">
+                        <button type="submit" class="bg-gray-700 text-white p-3 rounded-r-lg hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center text-gray-500 text-sm mt-12 pt-8 border-t border-gray-700">
+                &copy; 2024 Scent. All rights reserved.
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Product Details Page (initially hidden) -->
+    <div id="product-details-view" class="fixed inset-0 bg-white z-40 hidden p-6 overflow-y-auto pt-24">
+        <button id="close-product-view" class="absolute top-6 left-6 text-gray-500 hover:text-gray-800 text-2xl z-50">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="max-w-5xl mx-auto py-12 md:py-24">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-12">
+                <!-- Product Viewer -->
+                <div class="relative w-full md:w-1/2 p-8 flex items-center justify-center">
+                    <img id="product-image" src="" alt="Perfume Bottle" class="w-2/3 h-auto transition-transform duration-500 transform-gpu hover:scale-105">
+                </div>
+                <!-- Product Info & Details -->
+                <div class="w-full md:w-1/2 md:p-8">
+                    <h1 id="product-title" class="text-4xl md:text-5xl serif-font font-bold mb-2"></h1>
+                    <p id="product-description" class="text-gray-600 mb-4 leading-relaxed"></p>
+                    <div class="text-3xl font-semibold text-gray-900 mb-6" id="product-price"></div>
+
+                    <!-- Quantity Selector -->
+                    <div class="flex items-center space-x-4 mb-8">
+                        <label for="product-quantity" class="font-medium text-lg">Quantity:</label>
+                        <input type="number" id="product-quantity" value="1" min="1" class="w-20 p-2 text-center rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900">
+                    </div>
+
+                    <!-- Customer Reviews Section -->
+                    <div class="mb-8">
+                        <h3 class="font-semibold text-lg mb-4">What Our Customers Say</h3>
+                        <div id="customer-reviews" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Reviews will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+                    <button id="add-to-cart-btn" class="w-full py-4 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-700 transition-colors duration-300 shadow-lg">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Pop-out -->
+    <div id="cart-popup" class="fixed right-0 top-0 h-full w-full max-w-sm bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-500 overflow-y-auto pt-0">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200">
+            <h2 class="text-2xl font-semibold serif-font">Your Bag</h2>
+            <button id="close-cart-btn" class="text-gray-500 hover:text-gray-800 text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="cart-items" class="p-6">
+            <!-- Cart items will be dynamically inserted here -->
+            <p class="text-center text-gray-500">Your bag is empty.</p>
+        </div>
+        <div id="cart-summary" class="p-6 border-t border-gray-200">
+            <div class="flex justify-between items-center text-lg font-semibold mb-4">
+                <span>Total:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button id="checkout-btn" class="w-full py-4 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-700 transition-colors duration-300 shadow-lg">Checkout</button>
+        </div>
+    </div>
+
+    <!-- User Profile Pop-out -->
+    <div id="user-popup" class="fixed right-0 top-0 h-full w-full max-w-sm bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-500 overflow-y-auto pt-0">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200">
+            <h2 class="text-2xl font-semibold serif-font">Your Profile</h2>
+            <button id="close-user-btn" class="text-gray-500 hover:text-gray-800 text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="mb-6 pb-6 border-b border-gray-200">
+                <h3 class="font-semibold text-lg mb-2">Current Session ID:</h3>
+                <div class="flex items-center space-x-2">
+                    <p id="session-id-display" class="text-sm font-mono bg-gray-100 p-3 rounded-lg break-all flex-grow"></p>
+                    <button id="copy-session-id" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Share this ID to restore your session.</p>
+            </div>
+            
+            <!-- NEW: Load Session Section -->
+            <div class="mb-6 pb-6 border-b border-gray-200">
+                <h3 class="font-semibold text-lg mb-2">Load a Saved Session:</h3>
+                <div class="flex space-x-2">
+                    <input type="text" id="load-session-input" placeholder="Paste session ID here..." class="flex-grow p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900">
+                    <button id="load-session-btn" class="px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-700 transition-colors duration-300">
+                        Load
+                    </button>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-semibold text-lg mb-2">Last Saved Cart:</h3>
+                <div id="saved-data-container" class="text-sm text-gray-600">
+                    <p>No saved data found. Add an item and check out to save your cart!</p>
+                </div>
+            </div>
+            <button id="logout-btn" class="w-full py-3 bg-red-600 text-white rounded-lg font-bold hover:bg-red-500 transition-colors duration-300">Logout & Get New ID</button>
+        </div>
+    </div>
+
+    <!-- Checkout Page (initially hidden) -->
+    <div id="checkout-page" class="fixed inset-0 bg-white z-40 hidden p-6 overflow-y-auto pt-24">
+        <button id="close-checkout-btn" class="absolute top-6 left-6 text-gray-500 hover:text-gray-800 text-2xl z-50">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="max-w-xl mx-auto py-12 relative">
+            <h1 class="text-4xl serif-font font-bold mb-8">Checkout</h1>
+            <div class="bg-gray-100 p-6 rounded-lg mb-6">
+                <h3 class="font-semibold text-lg mb-2">Delivery Information</h3>
+                <p class="text-gray-600">Delivery is available in **Ibadan** and within the **University of Ibadan** campus.</p>
+            </div>
+            <form id="checkout-form" class="space-y-6">
+                <div>
+                    <label for="full-name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="full-name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200">
+                </div>
+                <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700">Delivery Address</label>
+                    <input type="text" id="address" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200">
+                </div>
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                    <input type="tel" id="phone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gray-500 focus:ring focus:ring-gray-200">
+                </div>
+                <div class="bg-gray-200 p-4 rounded-lg">
+                    <h4 class="font-bold text-lg mb-2">Order Summary</h4>
+                    <div id="checkout-summary-list"></div>
+                    <div class="flex justify-between items-center font-bold text-xl mt-4">
+                        <span>Total</span>
+                        <span id="checkout-summary-total"></span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <p class="text-gray-600 mb-4">Finalize your order by calling us to confirm payment and delivery:</p>
+                    <a href="tel:09130548567" class="inline-block px-8 py-3 bg-gray-900 text-white rounded-full font-bold hover:bg-gray-700 transition-colors duration-300">
+                        <i class="fas fa-phone mr-2"></i> 09130548567
+                    </a>
+                </div>
+                <button type="submit" id="submit-order-btn" class="w-full py-4 bg-gray-800 text-white rounded-lg font-bold hover:bg-gray-600 transition-colors duration-300 shadow-lg">Confirm Order</button>
+            </form>
+
+            <!-- Loading Spinner -->
+            <div id="loading-spinner" class="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center hidden">
+                <i class="fas fa-spinner fa-spin text-4xl text-gray-800"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Us Page (initially hidden) -->
+    <div id="about-us-view" class="fixed inset-0 bg-white z-40 hidden p-6 overflow-y-auto pt-24">
+        <button id="close-about-us-view" class="absolute top-6 left-6 text-gray-500 hover:text-gray-800 text-2xl z-50">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="max-w-4xl mx-auto py-12">
+            <h1 class="text-4xl md:text-5xl serif-font font-bold mb-6 text-center">Our Story</h1>
+            <div class="prose max-w-none text-lg text-gray-700 leading-relaxed">
+                <p class="mb-6">At **Scent.**, our journey began with a simple belief: that a fragrance is more than a product—it's an experience. We're not just creating perfumes; we're crafting liquid memories, bottled emotions, and signature scents that become a part of your unique story. Every bottle tells a tale of passion, from the initial spark of an idea to the final, meticulous blend.</p>
+                <p class="mb-6">We're obsessed with quality. Our master perfumers, true artists in their own right, meticulously source the finest, most potent ingredients from around the globe. We believe in the power of nature, the elegance of simplicity, and the artistry of blending. This isn't mass production; this is artisanal creation, where every single drop is handled with care and respect.</p>
+                <p class="mb-6">Scent. is more than a brand. It's a community of scent lovers who appreciate elegance, authenticity, and the power of a perfect fragrance to transform a moment. We're based right here in **Ibadan**, Nigeria, and our roots run deep in the city's vibrant culture and rich history. We're proud to bring a touch of luxury to our community and beyond. Thank you for joining us on this beautiful journey.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page (initially hidden) -->
+    <div id="contact-view" class="fixed inset-0 bg-white z-40 hidden p-6 overflow-y-auto pt-24">
+        <button id="close-contact-view" class="absolute top-6 left-6 text-gray-500 hover:text-gray-800 text-2xl z-50">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="max-w-4xl mx-auto py-12">
+            <h1 class="text-4xl md:text-5xl serif-font font-bold mb-6 text-center">Get in Touch</h1>
+            <div class="grid md:grid-cols-2 gap-8 text-lg text-gray-700">
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-2xl mb-2">Our Location</h3>
+                    <p class="leading-relaxed">Scent. Perfumes<br>University of Ibadan<br>Ibadan, Oyo State<br>Nigeria</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-2xl mb-2">Contact Details</h3>
+                    <p class="mb-2"><i class="fas fa-phone-alt mr-2 text-gray-600"></i><a href="tel:09130548567">09130548567</a></p>
+                    <p class="mb-2"><i class="fas fa-envelope mr-2 text-gray-600"></i><a href="mailto:info@scent.com">info@scent.com</a></p>
+                    <p><i class="fab fa-instagram mr-2 text-gray-600"></i><a href="#">@scent_official</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Page (initially hidden) -->
+    <div id="faq-view" class="fixed inset-0 bg-white z-40 hidden p-6 overflow-y-auto pt-24">
+        <button id="close-faq-view" class="absolute top-6 left-6 text-gray-500 hover:text-gray-800 text-2xl z-50">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="max-w-4xl mx-auto py-12">
+            <h1 class="text-4xl md:text-5xl serif-font font-bold mb-6 text-center">Frequently Asked Questions</h1>
+            <div class="space-y-6">
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-lg mb-2">How long will my perfume last?</h3>
+                    <p class="text-gray-700">The longevity of a fragrance depends on its composition and the skin's chemistry. Our Eau de Parfum scents typically last 6-8 hours, while our lighter body mists may require reapplication every 3-4 hours.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-lg mb-2">What is the difference between Eau de Parfum and Body Mist?</h3>
+                    <p class="text-gray-700">**Eau de Parfum** has a higher concentration of fragrance oils (typically 15-20%), resulting in a stronger and longer-lasting scent. A **Body Mist** has a much lower concentration (around 1-3%) and provides a light, refreshing aroma that is perfect for everyday use.</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-lg mb-2">Do you offer international shipping?</h3>
+                    <p class="text-gray-700">Currently, we only offer delivery within **Ibadan** and its environs. We are working to expand our reach soon!</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-lg mb-2">How can I track my order?</h3>
+                    <p class="text-gray-700">After you place your order, we will contact you via phone call or WhatsApp to confirm your payment and provide real-time updates on your delivery status.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Custom Modal for Alerts and Confirmation -->
+    <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[9999] hidden flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
+            <h3 id="modal-title" class="text-xl font-bold mb-4"></h3>
+            <p id="modal-message" class="text-gray-700 mb-6"></p>
+            <button id="modal-close-btn" class="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200">Okay</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // --- MANDATORY Firebase Variables ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // FIXED: Added a safer fallback for firebaseConfig to prevent JSON parsing errors.
+        const firebaseConfigStr = typeof __firebase_config !== 'undefined' ? __firebase_config : '{"apiKey":"dummy","authDomain":"dummy","projectId":"dummy"}';
+        const firebaseConfig = JSON.parse(firebaseConfigStr);
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // --- END MANDATORY Firebase Variables ---
+
+        // App and DB initialization
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // User session variables
+        let sessionId = null;
+        let isAuthReady = false;
+        let cart = [];
+
+        // UI Element References
+        const scentLogoBtn = document.getElementById('scent-logo-btn');
+        const searchIcon = document.getElementById('search-icon');
+        const cartIcon = document.getElementById('cart-icon');
+        const userIcon = document.getElementById('user-icon');
+        const searchPopup = document.getElementById('search-popup');
+        const closeSearchBtn = document.getElementById('close-search-btn');
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        const productListContainer = document.getElementById('product-list');
+        const productDetailsView = document.getElementById('product-details-view');
+        const closeProductViewBtn = document.getElementById('close-product-view');
+        const mainContent = document.getElementById('main-content');
+        const cartPopup = document.getElementById('cart-popup');
+        const closeCartBtn = document.getElementById('close-cart-btn');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalDisplay = document.getElementById('cart-total');
+        const addToCartBtn = document.getElementById('add-to-cart-btn');
+        const productQuantityInput = document.getElementById('product-quantity');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const userPopup = document.getElementById('user-popup');
+        const closeUserBtn = document.getElementById('close-user-btn');
+        const sessionIdDisplay = document.getElementById('session-id-display');
+        const copySessionIdBtn = document.getElementById('copy-session-id');
+        const loadSessionInput = document.getElementById('load-session-input');
+        const loadSessionBtn = document.getElementById('load-session-btn');
+        const savedDataContainer = document.getElementById('saved-data-container');
+        const logoutBtn = document.getElementById('logout-btn');
+        const checkoutPage = document.getElementById('checkout-page');
+        const closeCheckoutBtn = document.getElementById('close-checkout-btn');
+        const checkoutForm = document.getElementById('checkout-form');
+        const checkoutSummaryList = document.getElementById('checkout-summary-list');
+        const checkoutSummaryTotal = document.getElementById('checkout-summary-total');
+        const customModal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const customerReviewsContainer = document.getElementById('customer-reviews');
+        
+        const aboutUsView = document.getElementById('about-us-view');
+        const closeAboutUsViewBtn = document.getElementById('close-about-us-view');
+        const contactView = document.getElementById('contact-view');
+        const closeContactViewBtn = document.getElementById('close-contact-view');
+        const faqView = document.getElementById('faq-view');
+        const closeFaqViewBtn = document.getElementById('close-faq-view');
+        const allPages = [productDetailsView, aboutUsView, contactView, faqView, checkoutPage];
+        
+        // Mock product data
+        const products = [
+             { id: 'p1', title: 'Eternal Dusk', description: 'A deep, mysterious fragrance with notes of patchouli and cedarwood. Perfect for evening wear.', price: 180, image: 'https://placehold.co/400x600/b0b5bd/ffffff?text=Eternal+Dusk', reviews: [
+                { name: 'Tunde', rating: 5, comment: "This is my go-to for a special night out. The scent is strong and lasts all night. 💯" },
+                { name: 'Nkechi', rating: 4, comment: "It’s very earthy and bold. A little goes a long way. I love how it evolves on my skin." }
+            ]},
+            { id: 'p2', title: 'Golden Hour', description: 'A warm, radiant scent that captures the light of a summer afternoon. Notes of amber and vanilla.', price: 120, image: 'https://placehold.co/400x600/e0c6a5/ffffff?text=Golden+Hour', reviews: [
+                { name: 'Funke', rating: 5, comment: "Got so many compliments wearing this to a wedding. It's so bright and elegant." },
+                { name: 'Obi', rating: 4, comment: "A very soft and sweet fragrance. Not overpowering at all, perfect for everyday use." }
+            ]},
+            { id: 'p3', title: 'Rainforest Mist', description: 'A fresh, invigorating fragrance with crisp green notes and a hint of exotic florals.', price: 150, image: 'https://placehold.co/400x600/699c75/ffffff?text=Rainforest+Mist', reviews: [
+                { name: 'Chinedu', rating: 5, comment: "Smells exactly like a cool walk in the forest after the rain. So refreshing!" },
+                { name: 'Aisha', rating: 4, comment: "Light and subtle. I wear this to the office and it's never too much. Highly recommend." }
+            ]},
+            { id: 'p4', title: 'Velvet Midnight', description: 'A rich and luxurious fragrance, blending dark chocolate and spices with a subtle floral heart.', price: 210, image: 'https://placehold.co/400x600/404040/ffffff?text=Velvet+Midnight', reviews: [
+                { name: 'Segun', rating: 5, comment: "This is pure luxury in a bottle. Every time I wear it, heads turn. It's unique and sophisticated." },
+                { name: 'Bimbo', rating: 5, comment: "The smell is incredible! The chocolate note is there but it’s not overpowering. Very rich aroma." }
+            ]},
+            { id: 'p5', title: 'Ocean Breeze Roll-On', description: 'A portable roll-on with a clean, aquatic scent. Perfect for a quick refresh on the go.', price: 45, image: 'https://placehold.co/400x600/7a97b2/ffffff?text=Ocean+Breeze', reviews: [
+                { name: 'Ada', rating: 4, comment: "So refreshing! It's perfect for this humid Ibadan weather." },
+                { name: 'Emeka', rating: 5, comment: "I love the convenience. It smells so clean and fresh, perfect for a quick touch-up." }
+            ]},
+            { id: 'p6', title: 'Spiced Vanilla Roll-On', description: 'A warm, spicy roll-on that combines the sweetness of vanilla with a hint of cinnamon.', price: 50, image: 'https://placehold.co/400x600/b87333/ffffff?text=Spiced+Vanilla', reviews: [
+                { name: 'Sade', rating: 5, comment: "It’s so cozy and warm. Perfect for a chilly evening or just feeling comfy." },
+                { name: 'Kayode', rating: 4, comment: "Sweet but not too sweet. The cinnamon gives it a nice kick. I'm a fan." }
+            ]},
+            { id: 'p7', title: 'Citrus Zest Body Mist', description: 'A light and energizing body mist. A bright burst of lemon and grapefruit.', price: 60, image: 'https://placehold.co/400x600/f3e8b0/000000?text=Citrus+Zest', reviews: [
+                { name: 'Fatima', rating: 4, comment: "A burst of energy in a bottle! The lemon scent is just what I need in the mornings." },
+                { name: 'Olumide', rating: 5, comment: "Feels so light and non-sticky. The perfect mist for a quick refresh during the day." }
+            ]},
+            { id: 'p8', title: 'Enchanted Forest', description: 'A deep, enchanting scent of the forest floor after a rain. Notes of moss, green leaves, and damp earth.', price: 175, image: 'https://placehold.co/400x600/4b6a4a/ffffff?text=Enchanted+Forest', reviews: [
+                { name: 'Ifeanyi', rating: 5, comment: "This scent is so realistic, it makes me feel like I’m in a real forest. Unique and beautiful." },
+                { name: 'Zainab', rating: 4, comment: "Very calming and distinct. Not your typical fragrance, and I love that about it." }
+            ]}
+        ];
+
+        // --- Functions ---
+        const showModal = (title, message) => {
+            modalTitle.textContent = title;
+            modalMessage.innerHTML = message;
+            customModal.classList.remove('hidden');
+        };
+
+        const hideModal = () => customModal.classList.add('hidden');
+
+        const renderProducts = (productsToRender) => {
+            productListContainer.innerHTML = '';
+            productsToRender.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'flex-shrink-0 w-64 snap-start cursor-pointer transition-transform duration-300 hover:scale-105 md:w-auto';
+                productCard.innerHTML = `
+                    <div data-id="${product.id}" class="bg-white rounded-lg shadow-lg overflow-hidden group">
+                        <img src="${product.image}" alt="${product.title}" class="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="p-4 text-center">
+                            <h3 class="text-lg font-bold serif-font">${product.title}</h3>
+                            <p class="text-sm text-gray-500 mt-1">$${product.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                `;
+                productListContainer.appendChild(productCard);
+            });
+        };
+
+        const renderStars = (rating) => {
+            let stars = '';
+            for (let i = 0; i < 5; i++) {
+                stars += i < rating ? '<i class="fas fa-star text-yellow-400"></i>' : '<i class="far fa-star text-gray-300"></i>';
+            }
+            return stars;
+        };
+
+        // FIXED: Standardized page transitions to use 'hidden' class for consistency.
+        const showProductDetails = (productId) => {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('product-image').src = product.image;
+            document.getElementById('product-title').textContent = product.title;
+            document.getElementById('product-description').textContent = product.description;
+            document.getElementById('product-price').textContent = `$${product.price.toFixed(2)}`;
+            addToCartBtn.dataset.id = productId;
+            productQuantityInput.value = 1;
+            
+            customerReviewsContainer.innerHTML = '';
+            if (product.reviews && product.reviews.length > 0) {
+                product.reviews.forEach(review => {
+                    const reviewCard = document.createElement('div');
+                    reviewCard.className = 'bg-gray-100 p-4 rounded-lg shadow-inner flex flex-col items-start space-y-2';
+                    reviewCard.innerHTML = `
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-gray-800">${review.name}</span>
+                            <div class="text-sm">${renderStars(review.rating)}</div>
+                        </div>
+                        <p class="text-gray-600 text-sm italic leading-snug">"${review.comment}"</p>
+                    `;
+                    customerReviewsContainer.appendChild(reviewCard);
+                });
+            } else {
+                customerReviewsContainer.innerHTML = '<p class="text-center text-gray-500 col-span-2">No reviews yet. Be the first!</p>';
+            }
+
+            mainContent.classList.add('hidden');
+            productDetailsView.classList.remove('hidden');
+        };
+
+        const hideProductDetails = () => {
+            productDetailsView.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+        };
+
+        const showPage = (pageElement) => {
+            allPages.forEach(page => page.classList.add('hidden'));
+            mainContent.classList.add('hidden');
+            searchPopup.classList.add('hidden');
+            pageElement.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        
+        const showMainContent = () => {
+            allPages.forEach(page => page.classList.add('hidden'));
+            mainContent.classList.remove('hidden');
+            searchPopup.classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        const updateCart = () => {
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">Your bag is empty.</p>`;
+            } else {
+                cart.forEach(item => {
+                    const product = products.find(p => p.id === item.id);
+                    if (product) {
+                        const itemTotal = product.price * item.quantity;
+                        total += itemTotal;
+                        const cartItem = document.createElement('div');
+                        cartItem.className = 'flex items-center space-x-4 mb-4';
+                        cartItem.innerHTML = `
+                            <img src="${product.image}" alt="${product.title}" class="w-16 h-16 object-cover rounded-lg">
+                            <div class="flex-grow">
+                                <h4 class="font-semibold">${product.title}</h4>
+                                <p class="text-sm text-gray-500">Qty: ${item.quantity}</p>
+                            </div>
+                            <span class="font-bold">$${itemTotal.toFixed(2)}</span>
+                        `;
+                        cartItemsContainer.appendChild(cartItem);
+                    }
+                });
+            }
+            cartTotalDisplay.textContent = `$${total.toFixed(2)}`;
+            saveSessionData();
+            updateSavedCartDisplay();
+        };
+
+        const addToCart = (productId, quantity) => {
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({ id: productId, quantity });
+            }
+            updateCart();
+            showModal('Item Added!', `Your product has been added to your bag.`);
+        };
+        
+        const filterProducts = () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = products.filter(p => p.title.toLowerCase().includes(query) || p.description.toLowerCase().includes(query));
+            searchResults.innerHTML = filtered.length === 0 ? `<p class="text-center text-gray-500 mt-4">No results found.</p>` : '';
+            filtered.forEach(p => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'p-3 hover:bg-gray-100 cursor-pointer rounded-md';
+                resultItem.textContent = p.title;
+                resultItem.onclick = () => {
+                    searchPopup.classList.add('hidden');
+                    searchInput.value = '';
+                    showProductDetails(p.id);
+                };
+                searchResults.appendChild(resultItem);
+            });
+        };
+        
+        const handleScrollAnimation = () => {
+            document.querySelectorAll('.animate-fade-in').forEach(el => {
+                if (el.getBoundingClientRect().top <= window.innerHeight - 100) {
+                    el.classList.add('is-visible');
+                }
+            });
+        };
+        
+        const saveSessionData = async () => {
+            if (!sessionId || !isAuthReady) return;
+            const sessionDocRef = doc(db, `artifacts/${appId}/public/data/sessions`, sessionId);
+            try {
+                await setDoc(sessionDocRef, {
+                    cart: JSON.stringify(cart),
+                    timestamp: new Date(),
+                    lastUserId: auth.currentUser?.uid || null
+                }, { merge: true });
+            } catch (e) {
+                console.error("Error saving session data:", e);
+            }
+        };
+        
+        // FIXED: Added 'isSilent' flag to prevent showing a modal on automatic page loads.
+        const loadSessionData = async (loadId, isSilent = false) => {
+            if (!loadId) {
+                if (!isSilent) showModal("Invalid ID", "Please enter a valid session ID.");
+                return;
+            }
+            if (!isSilent) loadingSpinner.classList.remove('hidden');
+            const sessionDocRef = doc(db, `artifacts/${appId}/public/data/sessions`, loadId);
+            try {
+                const docSnap = await getDoc(sessionDocRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    cart = JSON.parse(data.cart || '[]');
+                    if (!isSilent) showModal("Session Loaded!", "Your cart has been restored from the saved session ID.");
+                    sessionId = loadId;
+                    sessionIdDisplay.textContent = sessionId;
+                } else {
+                    if (isSilent) {
+                        cart = []; // It's a new user, so ensure the cart is empty.
+                    } else {
+                        showModal("Session Not Found", "The session ID you entered does not exist.");
+                    }
+                }
+                updateCart();
+            } catch (e) {
+                console.error("Error loading session:", e);
+                if (!isSilent) showModal("Error", "There was an issue loading the session.");
+            } finally {
+                if (!isSilent) loadingSpinner.classList.add('hidden');
+            }
+        };
+
+        const updateCheckoutSummary = () => {
+            checkoutSummaryList.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                const product = products.find(p => p.id === item.id);
+                if (product) {
+                    const itemTotal = product.price * item.quantity;
+                    total += itemTotal;
+                    const summaryItem = document.createElement('div');
+                    summaryItem.className = 'flex justify-between items-center mb-2';
+                    summaryItem.innerHTML = `
+                        <span>${product.title} (x${item.quantity})</span>
+                        <span class="font-medium">$${itemTotal.toFixed(2)}</span>
+                    `;
+                    checkoutSummaryList.appendChild(summaryItem);
+                }
+            });
+            checkoutSummaryTotal.textContent = `$${total.toFixed(2)}`;
+        };
+
+        const updateSavedCartDisplay = () => {
+            if (cart.length === 0) {
+                savedDataContainer.innerHTML = '<p>No saved data found. Add an item to save your cart!</p>';
+            } else {
+                let html = '<ul class="list-disc list-inside space-y-1">';
+                cart.forEach(item => {
+                    const product = products.find(p => p.id === item.id);
+                    if (product) {
+                        html += `<li>${product.title} (Qty: ${item.quantity})</li>`;
+                    }
+                });
+                html += '</ul>';
+                savedDataContainer.innerHTML = html;
+            }
+        };
+
+        // FIXED: Major overhaul of the authentication flow for robustness.
+        const initializeSession = async () => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in. This will trigger on page load or after a sign-in/sign-out action.
+                    sessionId = user.uid;
+                    isAuthReady = true;
+                    sessionIdDisplay.textContent = sessionId;
+                    // Automatically load this user's session data silently.
+                    loadSessionData(sessionId, true);
+                } else {
+                    // User is signed out.
+                    isAuthReady = false;
+                    sessionId = null;
+                    sessionIdDisplay.textContent = 'N/A';
+                }
+            });
+
+            // Perform the initial sign-in action.
+            try {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Authentication failed:", error);
+                showModal("Authentication Error", "Could not start a session. Please refresh the page.");
+            }
+        };
+        
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+            initializeSession(); // Call the robust session initializer.
+            window.addEventListener('scroll', handleScrollAnimation);
+            handleScrollAnimation();
+        });
+        
+        scentLogoBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            searchPopup.classList.add('hidden');
+            cartPopup.classList.add('translate-x-full');
+            userPopup.classList.add('translate-x-full');
+            showMainContent();
+        });
+
+        searchIcon.addEventListener('click', () => searchPopup.classList.remove('hidden'));
+        closeSearchBtn.addEventListener('click', () => searchPopup.classList.add('hidden'));
+        cartIcon.addEventListener('click', () => cartPopup.classList.remove('translate-x-full'));
+        closeCartBtn.addEventListener('click', () => cartPopup.classList.add('translate-x-full'));
+        userIcon.addEventListener('click', () => userPopup.classList.remove('translate-x-full'));
+        closeUserBtn.addEventListener('click', () => userPopup.classList.add('translate-x-full'));
+
+        copySessionIdBtn.addEventListener('click', () => {
+            if (!sessionId) {
+                showModal("Error", "No session ID available to copy.");
+                return;
+            }
+            const tempInput = document.createElement('textarea');
+            tempInput.value = sessionId;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                if (document.execCommand('copy')) {
+                    showModal("Copied!", "Your session ID has been copied to your clipboard.");
+                } else {
+                    showModal("Error", "Could not copy ID. Please try again.");
+                }
+            } catch (err) {
+                showModal("Error", "Could not copy ID. Please try again.");
+            } finally {
+                document.body.removeChild(tempInput);
+            }
+        });
+
+        loadSessionBtn.addEventListener('click', () => {
+            const pastedId = loadSessionInput.value.trim();
+            if (pastedId) {
+                loadSessionData(pastedId);
+                loadSessionInput.value = '';
+                userPopup.classList.add('translate-x-full');
+            } else {
+                showModal("Invalid ID", "Please enter a valid session ID to load.");
+            }
+        });
+
+        document.querySelectorAll('.footer-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.dataset.target;
+                if (targetId === 'about-us') showPage(aboutUsView);
+                if (targetId === 'contact') showPage(contactView);
+                if (targetId === 'faq') showPage(faqView);
+            });
+        });
+        closeAboutUsViewBtn.addEventListener('click', showMainContent);
+        closeContactViewBtn.addEventListener('click', showMainContent);
+        closeFaqViewBtn.addEventListener('click', showMainContent);
+
+        logoutBtn.addEventListener('click', async () => {
+            await signOut(auth);
+            cart = [];
+            updateCart();
+            userPopup.classList.add('translate-x-full');
+            cartPopup.classList.add('translate-x-full');
+            showMainContent();
+            // A new anonymous user will be created automatically by the onAuthStateChanged logic.
+            showModal("Logged Out", "You've been signed out. A new anonymous session has started.");
+        });
+        
+        productListContainer.addEventListener('click', (e) => {
+            const productCard = e.target.closest('[data-id]');
+            if (productCard) showProductDetails(productCard.dataset.id);
+        });
+
+        closeProductViewBtn.addEventListener('click', hideProductDetails);
+        
+        addToCartBtn.addEventListener('click', () => {
+            const productId = addToCartBtn.dataset.id;
+            const quantity = parseInt(productQuantityInput.value, 10);
+            if (productId && quantity > 0) addToCart(productId, quantity);
+        });
+        
+        searchInput.addEventListener('input', filterProducts);
+        
+        modalCloseBtn.addEventListener('click', hideModal);
+
+        checkoutBtn.addEventListener('click', async () => {
+            if (cart.length === 0) {
+                showModal('Cart Empty', 'Your cart is empty. Please add items before checking out.');
+                return;
+            }
+            cartPopup.classList.add('translate-x-full');
+            updateCheckoutSummary();
+            showPage(checkoutPage);
+        });
+
+        closeCheckoutBtn.addEventListener('click', showMainContent);
+
+        checkoutForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            loadingSpinner.classList.remove('hidden');
+
+            const orderData = {
+                fullName: document.getElementById('full-name').value,
+                address: document.getElementById('address').value,
+                phone: document.getElementById('phone').value,
+                items: cart,
+                total: checkoutSummaryTotal.textContent,
+                timestamp: new Date(),
+                sessionId
+            };
+            
+            const userPrompt = `A new order has been placed.\nFull Name: ${orderData.fullName}\nPhone Number: ${orderData.phone}\nDelivery Address: ${orderData.address}\nOrder Items: ${cart.map(item => `${products.find(p => p.id === item.id).title} (x${item.quantity})`).join(', ')}\nTotal: ${orderData.total}`;
+            const systemPrompt = "You are a friendly, enthusiastic order confirmation bot for a perfume store named 'Scent.'! Your job is to create a personal and conversational order confirmation message. Do not use markdown, bullet points, or lists. Keep it a single paragraph and under 100 words. Thank the customer for their order and give them a warm welcome to the Scent. family.";
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userPrompt }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                    })
+                });
+                const result = await response.json();
+                const confirmationMessage = result?.candidates?.[0]?.content?.parts?.[0]?.text || "Thank you for your order! We'll be in touch shortly.";
+
+                if (isAuthReady && sessionId) {
+                    const orderCollectionRef = collection(db, `artifacts/${appId}/public/data/orders`);
+                    await addDoc(orderCollectionRef, orderData);
+                    const sessionDocRef = doc(db, `artifacts/${appId}/public/data/sessions`, sessionId);
+                    await setDoc(sessionDocRef, { cart: JSON.stringify(cart), timestamp: new Date() }, { merge: true });
+                }
+
+                showModal('Order Placed!', `${confirmationMessage}<br><br>Please call **09130548567** to finalize your payment and delivery.`);
+                
+                cart = [];
+                updateCart();
+                checkoutForm.reset();
+                showMainContent();
+
+            } catch (e) {
+                console.error("Error processing order: ", e);
+                showModal("Error", "There was an issue processing your order. Please contact us directly at 09130548567.");
+            } finally {
+                loadingSpinner.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
+
